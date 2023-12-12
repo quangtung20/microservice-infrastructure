@@ -27,7 +27,7 @@ phases:
     - cd $SRC_DIR
     - ls -lrt
     - terraform --version
-    - terraform init -input=false
+    - terraform init
     - terraform validate
     - terraform plan
     - terraform $TF_COMMAND --auto-approve
