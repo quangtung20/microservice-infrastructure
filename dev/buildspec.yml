@@ -25,7 +25,7 @@ phases:
     on-failure: ABORT
     commands:
     - cd $SRC_DIR
-    - ls -lrt $SRC_DIR
+    - ls -lrt
     - terraform --version
     - terraform init -input=false
     - terraform validate
