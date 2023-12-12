@@ -147,31 +147,58 @@ module "pipeline_due" {
   build_project         = "due-dev-build-repo"
   cluster_name          = module.ecs.cluster_name
   ecs_td_service        = module.ecs_due.fgms_td_service_name
-  repo_name             = "due-repo"
+  repo_name             = "quangtung20/microservice-service-repo"
   service-pipeline-name = "due-pipeline"
   codebuild-role        = module.iam_role.codebuild-role
+  depends_on            = [module.vpc, module.alb, module.dns_namespace, module.ecs, module.iam_role, module.rds_mysql, module.ecs_due]
+  app_service_path      = "due"
+  uri_repo              = "https://github.com/quangtung20/microservice-service-repo.git"
+  build_envs = {
+    DOCKER_REPO     = "due"
+    DOCKER_USER     = "quangtung20"
+    DOCKER_PASSWORD = "123456789xx"
+    DOCKER_VERSION  = "latest"
+  }
 }
 
-# module "pipeline_tre" {
-#   source                = "../modules/aws_code_pipeline"
-#   branch_name           = "master"
-#   bucket_artifact_name  = "pipeline-artifact-tre-20231211-bucket"
-#   build_project         = "tre-dev-build-repo"
-#   cluster_name          = module.ecs.cluster_name
-#   ecs_td_service        = module.ecs_tre.fgms_td_service_name
-#   repo_name             = "tre-repo"
-#   service-pipeline-name = "tre-pipeline"
-#   codebuild-role        = module.iam_role.codebuild-role
-# }
+module "pipeline_tre" {
+  source                = "../modules/aws_code_pipeline"
+  branch_name           = "master"
+  bucket_artifact_name  = "pipeline-artifact-tre-20231211-bucket"
+  build_project         = "tre-dev-build-repo"
+  cluster_name          = module.ecs.cluster_name
+  ecs_td_service        = module.ecs_tre.fgms_td_service_name
+  repo_name             = "quangtung20/microservice-service-repo"
+  service-pipeline-name = "tre-pipeline"
+  codebuild-role        = module.iam_role.codebuild-role
+  depends_on            = [module.vpc, module.alb, module.dns_namespace, module.ecs, module.iam_role, module.rds_mysql, module.ecs_tre]
+  app_service_path      = "tre"
+  uri_repo              = "https://github.com/quangtung20/microservice-service-repo.git"
+  build_envs = {
+    DOCKER_REPO     = "tre"
+    DOCKER_USER     = "quangtung20"
+    DOCKER_PASSWORD = "123456789xx"
+    DOCKER_VERSION  = "latest"
+  }
+}
 
-# module "pipeline_uno" {
-#   source                = "../modules/aws_code_pipeline"
-#   branch_name           = "master"
-#   bucket_artifact_name  = "pipeline-artifact-uno-20231211-bucket"
-#   build_project         = "uno-dev-build-repo"
-#   cluster_name          = module.ecs.cluster_name
-#   ecs_td_service        = module.ecs_uno.fgms_td_service_name
-#   repo_name             = "uno-repo"
-#   service-pipeline-name = "uno-pipeline"
-#   codebuild-role        = module.iam_role.codebuild-role
-# }
+module "pipeline_uno" {
+  source                = "../modules/aws_code_pipeline"
+  branch_name           = "master"
+  bucket_artifact_name  = "pipeline-artifact-uno-20231211-bucket"
+  build_project         = "uno-dev-build-repo"
+  cluster_name          = module.ecs.cluster_name
+  ecs_td_service        = module.ecs_uno.fgms_td_service_name
+  repo_name             = "quangtung20/microservice-service-repo"
+  service-pipeline-name = "uno-pipeline"
+  codebuild-role        = module.iam_role.codebuild-role
+  depends_on            = [module.vpc, module.alb, module.dns_namespace, module.ecs, module.iam_role, module.rds_mysql, module.ecs_uno]
+  app_service_path      = "uno"
+  uri_repo              = "https://github.com/quangtung20/microservice-service-repo.git"
+  build_envs = {
+    DOCKER_REPO     = "uno"
+    DOCKER_USER     = "quangtung20"
+    DOCKER_PASSWORD = "123456789xx"
+    DOCKER_VERSION  = "latest"
+  }
+}
