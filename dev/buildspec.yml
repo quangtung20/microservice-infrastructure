@@ -1,0 +1,38 @@
+version: 0.2
+
+env:
+  variables:
+    TERRAFORM_VERSION: "1.3.7"
+    TF_COMMAND: "apply"
+    AWS_ACCESS_KEY_ID: $ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $SECRET_ACCESS_KEY
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    on-failure: ABORT
+    commands:
+    - tf_version=$TERRAFORM_VERSION
+    - wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+    - unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
+    - mv terraform /usr/local/bin/
+  pre_build:
+    on-failure: ABORT
+    commands:
+    - echo terraform execution started on `date`
+  build:
+    on-failure: ABORT
+    commands:
+    - cd "${SRC_DIR}"
+    - ls -lrt ${SRC_DIR}"
+    - terraform --version
+    - terraform init -input=false
+    - terraform validate
+    - terraform plan
+    - terraform $TF_COMMAND --auto-approve
+  post_build:
+    on-failure: CONTINUE
+    commands:
+    - echo terraform execution completed on `date`
+
