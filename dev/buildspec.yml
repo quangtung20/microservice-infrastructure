@@ -17,8 +17,8 @@ phases:
     - wget https://releases.hashicorp.com/terraform/"$TERRAFORM_VERSION"/terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
     - unzip terraform_"$TERRAFORM_VERSION"_linux_amd64.zip
     - mv terraform /usr/local/bin/
-    - aws configure set aws_access_key_id "$ACCESS_KEY_ID"
-    - aws configure set aws_secret_access_key "$SECRET_ACCESS_KEY"
+    - aws configure set aws_access_key_id "${ACCESS_KEY_ID}"
+    - aws configure set aws_secret_access_key "${SECRET_ACCESS_KEY}"
     - aws configure set region us-east-1
   pre_build:
     on-failure: ABORT
