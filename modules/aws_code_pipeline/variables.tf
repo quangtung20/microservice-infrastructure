@@ -37,3 +37,12 @@ variable "ecs_td_service" {
 variable "codebuild-role" {
   type = any
 }
+
+variable "build_envs" {
+  type = map(string)
+}
+
+variable "app_service_path" {
+  type = string
+}
+

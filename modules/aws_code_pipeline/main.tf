@@ -2,26 +2,21 @@ data "aws_iam_role" "pipeline_role" {
   name = "AWSCodePipelineServiceRole-us-east-1-ecs-dev-pipeline"
 }
 
-data "aws_codestarconnections_connection" "pipeline-github" {
+data "aws_codestarconnections_connection" "pipeline_github" {
   name = "pipeline-github"
 }
 
-resource "aws_codecommit_repository" "repo" {
-  repository_name = var.repo_name
-}
-
-resource "aws_codebuild_project" "repo-project" {
+resource "aws_codebuild_project" "repo_project" {
   name         = var.build_project
   service_role = var.codebuild-role.arn
-
   artifacts {
     type = "NO_ARTIFACTS"
   }
 
   source {
     type      = "CODECOMMIT"
-    buildspec = "buildspec.yml"
-    location  = "https://github.com/quangtung20/uno-repo.git"
+    buildspec = "${var.app_service_path}/buildspec.yml"
+    location  = var.uri_repo
   }
 
   environment {
@@ -29,10 +24,19 @@ resource "aws_codebuild_project" "repo-project" {
     image           = "aws/codebuild/standard:5.0"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
+
+    // truyen dynamic variable
+    dynamic "environment_variable" {
+      for_each = var.build_envs
+      content {
+        name  = environment_variable.key
+        value = environment_variable.value
+      }
+    }
   }
 }
 
-resource "aws_s3_bucket" "bucket-artifact" {
+resource "aws_s3_bucket" "bucket_artifact" {
   bucket = var.bucket_artifact_name
 }
 
@@ -42,7 +46,7 @@ resource "aws_codepipeline" "service-pipeline" {
   role_arn = data.aws_iam_role.pipeline_role.arn
 
   artifact_store {
-    location = aws_s3_bucket.bucket-artifact.bucket
+    location = aws_s3_bucket.bucket_artifact.bucket
     type     = "S3"
   }
   # SOURCE
@@ -57,8 +61,8 @@ resource "aws_codepipeline" "service-pipeline" {
       output_artifacts = ["source_output"]
 
       configuration = {
-        FullRepositoryId = "quangtung20/uno-repo"
-        ConnectionArn    = "${data.aws_codestarconnections_connection.pipeline-github.arn}"
+        FullRepositoryId = "${var.repo_name}"
+        ConnectionArn    = "${data.aws_codestarconnections_connection.pipeline_github.arn}"
         BranchName       = "${var.branch_name}"
       }
     }
